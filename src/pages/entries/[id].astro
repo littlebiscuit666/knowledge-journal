@@ -10,23 +10,42 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const related = (await getPublishedEntries()).filter(
+  (e) => e.data.category === entry.data.category && e.id !== entry.id,
+);
 ---
 
 <BaseLayout title={`${entry.data.title} · 每日所学`} description={entry.data.title}>
-  <div class="mx-auto max-w-3xl">
-    <a
-      href="/"
-      class="mb-6 inline-block text-sm text-slate-400 hover:text-blue-600 dark:text-slate-500 dark:hover:text-blue-400"
-    >
-      ← 回时间线
-    </a>
-    <h1 class="mb-2 text-3xl font-bold">{entry.data.title}</h1>
+  <article class="mx-auto max-w-3xl">
+    <h1 class="mb-2 text-2xl font-bold md:text-3xl">{entry.data.title}</h1>
     <p class="mb-8 flex gap-3 text-sm text-slate-400 dark:text-slate-500">
       <span>{entry.data.category}</span>
       <span>{formatDate(entry.data.date)}</span>
     </p>
-    <div class="prose prose-slate dark:prose-invert max-w-none prose-pre:bg-slate-950">
+    <div class="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-20 prose-pre:bg-slate-950">
       <Content />
     </div>
-  </div>
+
+    {
+      related.length > 0 && (
+        <section class="mt-10 border-t border-slate-200 pt-6 dark:border-slate-800">
+          <h2 class="text-sm font-semibold text-slate-400 dark:text-slate-500">
+            {entry.data.category} · 其他 {related.length} 条
+          </h2>
+          <ul class="mt-3 space-y-1.5 text-sm">
+            {related.map((e) => (
+              <li>
+                <a
+                  href={`/entries/${e.id}/`}
+                  class="block truncate rounded px-2 py-1.5 text-slate-600 hover:bg-slate-100 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-blue-400"
+                >
+                  {e.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
 </BaseLayout>

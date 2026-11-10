@@ -1,28 +1,24 @@
 ---
-import { render } from 'astro:content';
-import type { Entry } from '../lib/entries';
+import { excerpt, formatDateShort, type Entry } from '../lib/entries';
 
 interface Props {
   entry: Entry;
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+const summary = excerpt(entry.body);
 ---
 
-<article class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-  <div class="mb-4 flex flex-wrap items-center gap-2">
+<article
+  class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+>
+  <div class="mb-1.5 flex items-center gap-2">
     <span
-      class="rounded-full bg-blue-100 px-3 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+      class="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300"
     >
       {entry.data.category}
     </span>
-    <a
-      href={`/entries/${entry.id}/`}
-      class="text-sm text-slate-400 underline-offset-2 hover:underline dark:text-slate-500"
-    >
-      {entry.data.title}
-    </a>
+    <span class="text-xs text-slate-400 dark:text-slate-500">{formatDateShort(entry.data.date)}</span>
     {
       entry.data.tags.length > 0 && (
         <span class="ml-auto flex gap-1.5">
@@ -35,7 +31,12 @@ const { Content } = await render(entry);
       )
     }
   </div>
-  <div class="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-20 prose-pre:bg-slate-950">
-    <Content />
-  </div>
+  <a href={`/entries/${entry.id}/`} class="block">
+    <h3 class="font-semibold leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
+      {entry.data.title}
+    </h3>
+    <p class="mt-1 line-clamp-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+      {summary}
+    </p>
+  </a>
 </article>

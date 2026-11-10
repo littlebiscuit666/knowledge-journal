@@ -13,23 +13,22 @@ const days = groupByDate(entries);
 ---
 
 <BaseLayout title={`${category} · 每日所学`}>
-  <div class="mx-auto max-w-3xl">
-    <a href="/" class="mb-6 inline-block text-sm text-slate-400 hover:text-blue-600 dark:text-slate-500">← 回时间线</a>
-    <h1 class="mb-8 text-2xl font-bold">{category} <span class="text-base font-normal text-slate-400">{entries.length} 条</span></h1>
-    <div class="space-y-10">
-      {
-        days.length === 0 && (
-          <p class="text-center text-slate-400 dark:text-slate-500">这个分类下还没有记录。</p>
-        )
-      }
-      {
-        days.map(([, dayEntries]) => (
-          <section class="space-y-4">
-            <h2 class="text-lg font-bold">{formatDate(dayEntries[0].data.date)}</h2>
-            {dayEntries.map((entry) => <EntryCard entry={entry} />)}
-          </section>
-        ))
-      }
-    </div>
+  <div class="space-y-8">
+    <h1 class="text-2xl font-bold">
+      {category} <span class="text-base font-normal text-slate-400">{entries.length} 条</span>
+    </h1>
+    {
+      days.length === 0 && (
+        <p class="text-center text-slate-400 dark:text-slate-500">这个分类下还没有记录。</p>
+      )
+    }
+    {
+      days.map(([, dayEntries]) => (
+        <section class="space-y-3">
+          <h2 class="text-lg font-bold">{formatDate(dayEntries[0].data.date)}</h2>
+          {dayEntries.map((entry) => <EntryCard entry={entry} />)}
+        </section>
+      ))
+    }
   </div>
 </BaseLayout>

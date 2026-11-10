@@ -21,6 +21,11 @@ export function formatDate(date: Date): string {
   }).format(date);
 }
 
+/** 「2026-11-10」 */
+export function formatDateShort(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
 /** 按 YYYY-MM-DD 分组；要求传入已排序数组，保持顺序 */
 export function groupByDate(entries: Entry[]): [string, Entry[]][] {
   const map = new Map<string, Entry[]>();
@@ -31,4 +36,17 @@ export function groupByDate(entries: Entry[]): [string, Entry[]][] {
     else map.set(key, [e]);
   }
   return [...map.entries()];
+}
+
+/** 从 Markdown 正文提取纯文本摘要（去代码块/图片/标记符号），截断到 len 字 */
+export function excerpt(body: string, len = 90): string {
+  const text = body
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/[*_>`~]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return text.length > len ? text.slice(0, len) + '…' : text;
 }

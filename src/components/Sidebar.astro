@@ -1,0 +1,91 @@
+---
+import { CATEGORIES, getPublishedEntries } from '../lib/entries';
+
+const entries = await getPublishedEntries();
+const path = Astro.url.pathname;
+
+const currentEntryId = path.startsWith('/entries/')
+  ? path.replace(/^\/entries\//, '').replace(/\/$/, '')
+  : null;
+const currentCategory =
+  path.startsWith('/category/') && path.split('/').length > 2
+    ? decodeURIComponent(path.split('/')[2])
+    : null;
+const isHome = path === '/';
+
+const byCat = CATEGORIES.map((cat) => ({
+  cat,
+  items: entries.filter((e) => e.data.category === cat),
+}));
+---
+
+<div class="mb-4 flex items-center justify-between md:hidden">
+  <span class="font-bold">目录</span>
+  <button
+    id="menu-close"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-md text-slate-500 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800"
+    aria-label="关闭目录"
+  >
+    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M6 6l12 12M18 6L6 18"></path>
+    </svg>
+  </button>
+</div>
+
+<nav class="space-y-1 text-sm md:sticky md:top-20">
+  <a
+    href="/"
+    class={`block rounded-lg px-3 py-1.5 font-medium ${
+      isHome
+        ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400'
+        : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
+    }`}
+  >
+    时间线
+  </a>
+  {
+    byCat.map(({ cat, items }) => {
+      const isCurrentCat = currentCategory === cat;
+      const containsCurrent = !!currentEntryId && items.some((i) => i.id === currentEntryId);
+      return (
+        <details open={isCurrentCat || containsCurrent || undefined} class="group">
+          <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-1.5 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center gap-1.5">
+              <svg
+                class="h-3 w-3 shrink-0 transition-transform group-open:rotate-90"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <path d="M9 6l6 6-6 6"></path>
+              </svg>
+              {cat}
+            </span>
+            <span class="text-xs text-slate-400">{items.length}</span>
+          </summary>
+          {items.length > 0 && (
+            <ul class="ml-4 mt-0.5 space-y-0.5 border-l border-slate-200 pl-2 dark:border-slate-800">
+              {items.map((e) => (
+                <li>
+                  <a
+                    href={`/entries/${e.id}/`}
+                    aria-current={e.id === currentEntryId ? 'page' : undefined}
+                    class={`block truncate rounded px-2 py-1 ${
+                      e.id === currentEntryId
+                        ? 'bg-blue-50 font-medium text-blue-600 dark:bg-blue-950 dark:text-blue-400'
+                        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100'
+                    }`}
+                  >
+                    {e.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </details>
+      );
+    })
+  }
+</nav>
