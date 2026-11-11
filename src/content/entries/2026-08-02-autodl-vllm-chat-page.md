@@ -6,7 +6,7 @@ tags: [autodl, vllm, transformers, 日记归档]
 draft: false
 ---
 
-今天在 AutoDL GPU 服务器（westc:50262）上完成了：连接服务器并拉起 ComfyUI + Qwen3-TTS → 装 vLLM 加速 Qwen3-4B 推理（走了一段弯路）→ 评估后停掉 vLLM，改用 transformers 轻量聊天页挂在 6008，并与 TTS 做成可切换。本文档记录全过程、命令清单和踩坑经验，方便复盘。
+今天在 AutoDL GPU 服务器（westc:5xxxx）上完成了：连接服务器并拉起 ComfyUI + Qwen3-TTS → 装 vLLM 加速 Qwen3-4B 推理（走了一段弯路）→ 评估后停掉 vLLM，改用 transformers 轻量聊天页挂在 6008，并与 TTS 做成可切换。本文档记录全过程、命令清单和踩坑经验，方便复盘。
 
 ---
 
@@ -14,7 +14,7 @@ draft: false
 
 | 项 | 信息 |
 |---|---|
-| 连接 | `ssh -p 50262 root@connect.westc.seetacloud.com`（密码 `********`） |
+| 连接 | `ssh -p 5xxxx root@connect.westc.seetacloud.com`（密码 `********`） |
 | GPU | RTX 4080 SUPER（32 GB），驱动 595.71.05 |
 | base python | `/root/miniconda3/bin/python` |
 | 数据盘 | `/root/autodl-tmp`（持久，模型/数据放这，今天剩 ~4G） |
@@ -105,7 +105,7 @@ curl http://127.0.0.1:8000/v1/chat/completions -H 'Content-Type: application/jso
 # 停（注意自匹配，用括号正则）
 pkill -f '[v]llm serve'
 ```
-> 端口 8000 AutoDL 不代理，本地用 SSH 隧道：`ssh -L 8000:localhost:8000 -p 50262 root@connect.westc.seetacloud.com`
+> 端口 8000 AutoDL 不代理，本地用 SSH 隧道：`ssh -L 8000:localhost:8000 -p 5xxxx root@connect.westc.seetacloud.com`
 
 ### 4.4 transformers 聊天页 + 切换（当前在用）
 ```bash

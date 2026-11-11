@@ -28,7 +28,7 @@ draft: false
 
 链路全部跑通且自动化:
 
-1. **远端 AutoDL** RTX 4080S(connect.westc.seetacloud.com:50262),ComfyUI 6006 端口常驻
+1. **远端 AutoDL** RTX 4080S(connect.westc.seetacloud.com:5xxxx),ComfyUI 6006 端口常驻
 2. **本机 SSH 隧道** 6007 → 远端 6006(`autodl_forward.py` 后台常驻)
 3. **lora-studio** 8899 端口(`python app.py` 后台),ComfyUI 批量生图 + 校对台
 4. **Su Qing LoRA 模板** 8月23日新建(`comic_lora_suqing.json`)

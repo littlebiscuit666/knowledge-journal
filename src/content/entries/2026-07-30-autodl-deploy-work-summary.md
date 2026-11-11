@@ -14,7 +14,7 @@ draft: false
 
 | 项 | 信息 |
 |---|---|
-| 连接 | `ssh -p 50262 root@connect.westc.seetacloud.com`（密码 `********`） |
+| 连接 | `ssh -p 5xxxx root@connect.westc.seetacloud.com`（密码 `********`） |
 | GPU | RTX 4080 SUPER（32 GB），驱动 595.71.05 |
 | 系统 | AutoDL 容器，CUDA 可用 |
 | base python | `/root/miniconda3/bin/python` |
@@ -231,4 +231,4 @@ inference.inference_patch(prompt_lines=PROMPT_LINES, pieces=1)
 
 ---
 
-*文档生成于 2026-07-30，对应 AutoDL 实例 connect.westc.seetacloud.com:50262。*
+*文档生成于 2026-07-30，对应 AutoDL 实例 connect.westc.seetacloud.com:5xxxx。*

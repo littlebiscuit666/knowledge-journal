@@ -383,4 +383,4 @@ netstat -ano | grep ':8899' | head -3   # 拿 PID
 
 ---
 
-*文档生成于 2026-08-25,AutoDL 实例 connect.westc.seetacloud.com:50262 / RTX 4080 SUPER*
+*文档生成于 2026-08-25,AutoDL 实例 connect.westc.seetacloud.com:5xxxx / RTX 4080 SUPER*

@@ -8,7 +8,7 @@ draft: false
 
 > 把本地 Intel Arc（XPU）上跑的 Qwen2.5-0.5B 护符 LoRA 微调，迁移到 AutoDL 的 NVIDIA GPU 上，基座升级为 **Qwen3-4B**，从零跑通「训练 → 验证 → 网页部署」全流程。
 >
-> 日期：2026-08-02 ｜ 服务器：AutoDL `westc:50262`（RTX 4080 SUPER）
+> 日期：2026-08-02 ｜ 服务器：AutoDL `westc:5xxxx`（RTX 4080 SUPER）
 
 ---
 
