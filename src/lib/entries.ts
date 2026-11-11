@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-export const CATEGORIES = ['提示词', '技术', '工具', '金融', '生活'] as const;
+export const CATEGORIES = ['提示词', '技术', '面试', '工具', '金融', '生活'] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 export type Entry = CollectionEntry<'entries'>;

@@ -6,7 +6,7 @@ const entries = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
-    category: z.enum(['提示词', '技术', '工具', '金融', '生活']),
+    category: z.enum(['提示词', '技术', '面试', '工具', '金融', '生活']),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),
