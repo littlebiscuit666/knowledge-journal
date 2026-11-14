@@ -13,7 +13,7 @@ draft: false
 ## 一、项目位置与环境
 
 - 项目：`D:\zcode-workspace\mysql-redis-lab`（Python 3.11 + pymysql + SQLAlchemy + redis-py）
-- 数据库：腾讯云 MySQL **5.7.18**（`gz-cdb-q6v9mfmr.sql.tencentcdb.com:23594`，与 data-agent 同一实例）
+- 数据库：腾讯云 MySQL **5.7.18**（`gz-cdb-xxxxx.sql.tencentcdb.com:2xxxx`，与 data-agent 同一实例）
   - 新建了独立学习库 **`mysql_lab`**，完全没碰 userdraw 数仓 ✅
   - 造了 10 万行 `orders` 订单表当实验数据
 - Redis：本机 Docker 新容器 `redis-lab`（官方 `redis:7-alpine` 镜像，端口 6379）
