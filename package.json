@@ -11,6 +11,8 @@
   "dependencies": {
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.11",
+    "@hugeicons/core-free-icons": "^4.4.0",
+    "@hugeicons/react": "^1.1.10",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "^4.1.0",
     "astro": "^5.7.0",

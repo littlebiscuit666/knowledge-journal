@@ -20,6 +20,16 @@ export interface Demo {
 
 const ALL_DEMOS: Demo[] = [
   {
+    slug: 'branched-menu',
+    title: 'BranchedMenu',
+    description:
+      'React Bits 开源组件：书页目录式的树状导航菜单，SVG 分支线沿圆角弧生长、选中项的强调线沿树干滑行，折叠用 grid 动画。用站内六个分类做了真实导航。附集成提示词中文翻译。',
+    date: '2026-11-18',
+    tags: ['react', 'svg', '导航'],
+    preview:
+      'linear-gradient(rgba(255,255,255,0.95) 100%, transparent) 0 0 / 2px 30% no-repeat, linear-gradient(rgba(255,255,255,0.55) 100%, transparent) 12px 0 / 2px 100% no-repeat, linear-gradient(rgba(255,255,255,0.3) 100%, transparent) 12px 25% / 30px 2px no-repeat, linear-gradient(rgba(255,255,255,0.3) 100%, transparent) 12px 55% / 30px 2px no-repeat, linear-gradient(rgba(255,255,255,0.3) 100%, transparent) 12px 85% / 30px 2px no-repeat',
+  },
+  {
     slug: 'pattern-waves',
     title: 'PatternWaves',
     description:
