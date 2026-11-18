@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { DEMOS } from '../../lib/demos';
+---
+
+<BaseLayout title="特效演示 · 每日所学" description="站内 UI 特效演示索引：React Bits 组件、WebGL 效果等的可玩 Demo 合集，每个演示页附实现说明与提示词存档。">
+  <article class="mx-auto max-w-3xl">
+    <h1 class="mb-2 text-2xl font-bold md:text-3xl">特效演示</h1>
+    <p class="mb-8 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+      平时折腾的 UI 特效都收在这里：每个都是能上手玩的实时 Demo，页面内附实现说明，
+      涉及开源组件的会连同集成提示词一起存档。持续新增中。
+    </p>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      {
+        DEMOS.map((demo) => (
+          <a
+            href={`/demos/${demo.slug}/`}
+            class="group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+          >
+            <div
+              class="h-28 w-full border-b border-slate-200 dark:border-slate-800"
+              style={`background-color: #050507; background-image: ${demo.preview}; background-size: 100% 100%, 11px 11px;`}
+              aria-hidden="true"
+            />
+            <div class="p-5">
+              <div class="flex items-center gap-2">
+                <h3 class="font-semibold leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                  {demo.title}
+                </h3>
+                <span class="ml-auto flex gap-1.5">
+                  {demo.tags.map((tag) => (
+                    <span class="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                      #{tag}
+                    </span>
+                  ))}
+                </span>
+              </div>
+              <p class="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{demo.description}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </article>
+</BaseLayout>

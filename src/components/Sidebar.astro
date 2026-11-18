@@ -1,5 +1,6 @@
 ---
 import { CATEGORIES, getPublishedEntries } from '../lib/entries';
+import { DEMOS } from '../lib/demos';
 
 const entries = await getPublishedEntries();
 const path = Astro.url.pathname;
@@ -12,6 +13,7 @@ const currentCategory =
     ? decodeURIComponent(path.split('/')[2])
     : null;
 const isHome = path === '/';
+const isDemos = path.startsWith('/demos/');
 
 const byCat = CATEGORIES.map((cat) => ({
   cat,
@@ -42,6 +44,17 @@ const byCat = CATEGORIES.map((cat) => ({
     }`}
   >
     时间线
+  </a>
+  <a
+    href="/demos/"
+    class={`flex items-center justify-between rounded-lg px-3 py-1.5 font-medium ${
+      isDemos
+        ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400'
+        : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
+    }`}
+  >
+    特效演示
+    <span class="text-xs text-slate-400">{DEMOS.length}</span>
   </a>
   {
     byCat.map(({ cat, items }) => {
