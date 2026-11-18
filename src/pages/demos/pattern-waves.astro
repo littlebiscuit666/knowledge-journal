@@ -1,9 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PatternWavesHero from '../../components/patternwaves/PatternWavesHero.jsx';
-// 源码块用 ?raw 导入，构建时内联文件内容，保证「页面展示 = 实际运行」单一事实来源
-import jsxSource from '../../components/patternwaves/PatternWaves.jsx?raw';
-import cssSource from '../../components/patternwaves/PatternWaves.css?raw';
 
 const usageExample = `import PatternWaves from './PatternWaves';
 
@@ -57,26 +54,17 @@ const props = [
   <article class="prose prose-slate dark:prose-invert mt-10 max-w-none prose-headings:scroll-mt-20 prose-pre:bg-slate-950">
     <h2 id="about">这是什么</h2>
     <p>
-      <strong>PatternWaves</strong> 是 <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">React Bits</a>
-      组件库中的一个开源 React 组件：用 <code>ogl</code>（WebGL）在网页上渲染一片会动的波浪表面——
-      点阵、方块、等高线、字符雨都是它的「打印」方式；光标划过会留下捕捉光线的涟漪尾迹，点击会溅起水花。
+      <strong>PatternWaves</strong> 是
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">React Bits</a>
+      组件库中的一个开源 React 组件（变体 JavaScript + CSS，依赖 <code>ogl</code>）：
+      用 WebGL 在网页上渲染一片会动的波浪表面——点阵、方块、等高线、字符雨都是它的「打印」方式；
+      光标划过会留下捕捉光线的涟漪尾迹，点击会溅起水花。顶部就是实时效果，六个预设可切换。
     </p>
     <p>
       它的发布方式很特别：官方提供一段<strong>集成提示词（Prompt）</strong>——把组件源码、用法示例和
       Props 表打包成一段结构化文本，交给 Claude Code、Cursor 这类 AI 编码工具，它就能自动完成
-      装依赖、落文件、渲染组件的全过程。
+      装依赖、落文件、渲染组件的全过程。下方收录这段提示词的中文翻译，专有名词保留英文原文。
     </p>
-    <p>
-      本页就是用这段提示词集成出来的成果：顶部是<em>实时效果</em>（六个预设可切换），下方是提示词全文的中文翻译。
-      翻译约定：专有名词（组件名、prop 名、预设名、依赖名等）保留英文原文，代码块原样收录、不做翻译。
-    </p>
-
-    <h2 id="meta">组件信息</h2>
-    <ul>
-      <li>组件：<code>PatternWaves</code></li>
-      <li>变体：JavaScript + CSS</li>
-      <li>依赖：<code>ogl</code></li>
-    </ul>
 
     <h2 id="usage">用法示例</h2>
     <pre><code class="language-jsx">{usageExample}</code></pre>
@@ -98,12 +86,6 @@ const props = [
       </tbody>
     </table>
 
-    <h2 id="source">组件完整源码</h2>
-    <pre><code class="language-jsx">{jsxSource}</code></pre>
-
-    <h2 id="css">组件 CSS</h2>
-    <pre><code class="language-css">{cssSource}</code></pre>
-
     <h2 id="steps">集成步骤</h2>
     <ol>
       <li>安装列出的依赖（<code>ogl</code>）。</li>
@@ -113,18 +95,13 @@ const props = [
       <li>根据具体场景调整 props —— 全部可用选项见上方 Props 表。</li>
     </ol>
 
-    <h2 id="colophon">本页是怎么搭的</h2>
-    <ul>
-      <li>本站是 Astro 5 纯静态站，通过 <code>@astrojs/react</code> 挂了一个 React 岛（<code>client:visible</code>），React 代码只在本页加载，其余页面零影响。</li>
-      <li>组件源码一行未改，原样收录在 <code>src/components/patternwaves/</code>；页面上的源码块在构建时直接从组件文件读取，展示与运行永远一致。</li>
-      <li>顶部六个预设按钮就是 <code>preset</code> prop 的实况演示：切换时只换这一个 prop，其余渲染参数全部交给预设。</li>
-    </ul>
-
-    <h2 id="origin">来源与授权</h2>
-    <ul>
-      <li>组件与提示词来自 <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">reactbits.dev</a>（React Bits），MIT License。</li>
-      <li>完整组件索引：<a href="https://reactbits.dev/llms.txt" target="_blank" rel="noopener noreferrer">https://reactbits.dev/llms.txt</a> —— 这个组件不合适或需要更多素材时，可以直接抓取该文件。</li>
-      <li>注意：提示词模板中「组件完整源码」一段是占位符，投喂 AI 前需要把真实源码粘进去。</li>
-    </ul>
+    <h2 id="origin">来源</h2>
+    <p>
+      组件与提示词来自
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">reactbits.dev</a>（React Bits，MIT License），
+      完整组件索引见
+      <a href="https://reactbits.dev/llms.txt" target="_blank" rel="noopener noreferrer">reactbits.dev/llms.txt</a>。
+      注意：提示词模板中「组件完整源码」一段是占位符，投喂 AI 前需要把真实源码粘进去。
+    </p>
   </article>
 </BaseLayout>
