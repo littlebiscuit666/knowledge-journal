@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CircularCarouselHero from '../../components/circularcarousel/CircularCarouselHero.jsx';
+import PromptCopyBox from '../../components/PromptCopyBox.astro';
+// 提示词全文存为 md 单一事实来源，?raw 读入供一键复制
+import promptZh from '../../lib/prompts/circular-carousel.zh.md?raw';
+
+const usageExample = `import CircularCarousel from './CircularCarousel';
+
+const items = [
+  { src: '/images/valley.jpg', alt: 'Mist drifting through a valley', title: 'Valley', subtitle: 'Landscape' },
+  { src: '/images/portrait.jpg', alt: 'A studio portrait', title: 'Portrait', subtitle: 'Studio' },
+  { src: '/images/towers.jpg', alt: 'Glass towers from street level', title: 'Towers', subtitle: 'Architecture' }
+];
+
+<div style={{ width: '100%', height: '560px', position: 'relative' }}>
+  <CircularCarousel
+    items={items}
+    preset="cylinder"
+    intro="rise"
+    cardWidth={220}
+    aspectRatio={1}
+    speed={14}
+    captions
+  />
+</div>`;
+
+const props = [
+  { name: 'items', type: 'Array<{ src, alt?, title?, subtitle? }>', def: '10 张示例照片', desc: '环绕排列的图片。alt 文本会播报给屏幕阅读器，title 和可选 subtitle 由字幕展示。传入等长的新列表会让每张卡片交叉淡入为新图片。' },
+  { name: 'preset', type: "'cylinder' | 'orbit' | 'wheel' | 'panorama'", def: "'cylinder'", desc: '环的形状。cylinder 卡片朝外，orbit 让每张卡片都转向你，wheel 上下旋转，panorama 把相机放进环内。' },
+  { name: 'intro', type: "'assemble' | 'rise' | 'spin' | 'none'", def: "'rise'", desc: '图片加载完成后的入场动画。assemble 从更大的环滑入归位，rise 逐张从画面边缘滑入，spin 快速旋转一圈后落定。' },
+  { name: 'cardWidth', type: 'number', def: '220', desc: '卡片宽度（px）。整个环会在需要时缩小以适配容器。' },
+  { name: 'aspectRatio', type: 'number', def: '1', desc: '卡片宽除以高。图片会被裁切填充。' },
+  { name: 'gap', type: 'number', def: '25', desc: '相邻卡片的间距（px）。' },
+  { name: 'curve', type: 'number', def: '来自预设', desc: '卡片弯曲贴合环的程度，0 全平到 1 完全包裹。orbit 忽略此项。' },
+  { name: 'tilt', type: 'number', def: '来自预设', desc: '相机角度（度）。负值向下俯视环。' },
+  { name: 'perspective', type: 'number', def: '来自预设', desc: '相机距离（px）。数值越小景深越夸张。panorama 自行设定，因为相机就在中心。' },
+  { name: 'autoplay', type: "'drift' | 'step' | 'off'", def: "'drift'", desc: 'drift 让环持续转动，step 一次移动一张并落定在上面，off 只在你操作时才动。' },
+  { name: 'speed', type: 'number', def: '14', desc: 'drift 模式的转速（度/秒）。' },
+  { name: 'interval', type: 'number', def: '3', desc: 'step 模式两次移动之间的秒数。' },
+  { name: 'direction', type: "'left' | 'right'", def: "'left'", desc: '前排卡片行进的方向。甩动环会把它改成你甩的方向。在 wheel 上，left 表示向上。' },
+  { name: 'draggable', type: 'boolean', def: 'true', desc: '允许用鼠标、手指或横向触控板滚动抓住并甩动环。' },
+  { name: 'momentum', type: 'number', def: '0.6', desc: '甩出后惯性滑行多久才 blend 回自动播放速度，0 到 1。' },
+  { name: 'snap', type: 'boolean', def: 'true', desc: '环每次静止时落定到某张卡片上。' },
+  { name: 'pauseOnHover', type: 'boolean', def: 'true', desc: '指针悬停时让环缓缓停下。' },
+  { name: 'focusOnClick', type: 'boolean', def: 'true', desc: '点击卡片把它转到正前方。' },
+  { name: 'parallax', type: 'number', def: '0.3', desc: '相机朝指针方向倾斜的程度，0 到 1。' },
+  { name: 'stretch', type: 'number', def: '0.5', desc: '环高速旋转时向外膨胀的程度，0 到 1。' },
+  { name: 'depthFade', type: 'number', def: '0.55', desc: '卡片转向远处时向 fadeColor 淡出的强度，0 到 1。' },
+  { name: 'fadeColor', type: 'string', def: "'#000000'", desc: '远处卡片淡向的颜色。与轮播背后的背景色保持一致。' },
+  { name: 'innerShade', type: 'number', def: '0.6', desc: '从环背面看到的内侧面的亮度，0 到 1。' },
+  { name: 'cornerRadius', type: 'number', def: '12', desc: '卡片圆角半径（px）。' },
+  { name: 'captions', type: 'boolean', def: 'false', desc: '在环下方显示正前方卡片的标题、副标题和位置序号。' },
+  { name: 'onChange', type: '(index: number) => void', def: '-', desc: '有不同卡片转到正前方时调用。' },
+  { name: 'onItemClick', type: '(item, index: number) => void', def: '-', desc: '点击卡片或在轮播上按 Enter 时调用。' },
+  { name: 'className', type: 'string', def: "''", desc: '容器的额外类名。' },
+  { name: 'style', type: 'CSSProperties', def: '-', desc: '容器的内联样式。' },
+];
+---
+
+<BaseLayout
+  title="CircularCarousel 实时演示 · React Bits 集成提示词 · 每日所学"
+  description="React Bits 开源组件 CircularCarousel 的实时效果演示与集成提示词中文翻译：纯 CSS 3D 的环形照片轮播，四种形状预设可切换。"
+>
+  <CircularCarouselHero client:visible />
+
+  <article class="prose prose-slate dark:prose-invert mt-10 max-w-none prose-headings:scroll-mt-20 prose-pre:bg-slate-950">
+    <h2 id="about">这是什么</h2>
+    <p>
+      <strong>CircularCarousel</strong> 是
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">React Bits</a>
+      组件库中的一个开源 React 组件（变体 JavaScript + CSS，无外部依赖）：
+      用纯 CSS 3D 变换把一排照片围成一个会转的环——四种形状（cylinder 圆筒 / orbit 环绕 / wheel 摩天轮 / panorama 全景）、
+      三种入场动画、可抓取甩动带惯性、卡片上翘视差、远处淡出。顶部演示用的是站内自己的图片素材。
+    </p>
+    <p>
+      它的发布方式和前两个特效
+      <a href="/demos/pattern-waves/">PatternWaves</a>、<a href="/demos/crystalized-ball/">CrystalizedBall</a>
+      一样：官方提供一段<strong>集成提示词（Prompt）</strong>——把组件源码、用法示例和 Props 表打包成一段结构化文本，
+      交给 Claude Code、Cursor 这类 AI 编码工具，它就能自动完成落文件、渲染组件的全过程。
+      下方收录这段提示词的中文翻译，专有名词保留英文原文。
+    </p>
+
+    <h2 id="usage">用法示例</h2>
+    <pre><code class="language-jsx">{usageExample}</code></pre>
+
+    <h2 id="props">Props 一览</h2>
+    <table>
+      <thead>
+        <tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        {props.map((p) => (
+          <tr>
+            <td><code>{p.name}</code></td>
+            <td><code>{p.type}</code></td>
+            <td><code>{p.def}</code></td>
+            <td>{p.desc}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2 id="steps">集成步骤</h2>
+    <ol>
+      <li>安装列出的依赖（本组件无外部依赖）。</li>
+      <li>把组件源码复制到项目的合适目录。</li>
+      <li>在引入组件的同时引入 CSS 文件。</li>
+      <li>以上面的用法示例为起点导入并渲染组件。</li>
+      <li>根据具体场景调整 props —— 全部可用选项见上方 Props 表。</li>
+    </ol>
+
+    <h2 id="origin">来源</h2>
+    <p>
+      组件与提示词来自
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">reactbits.dev</a>（React Bits，MIT License），
+      完整组件索引见
+      <a href="https://reactbits.dev/llms.txt" target="_blank" rel="noopener noreferrer">reactbits.dev/llms.txt</a>。
+    </p>
+
+    <h2 id="prompt-zh">一键复制：完整提示词（中文）</h2>
+    <p>
+      下面整段就是把 <code>CircularCarousel</code> 装进任意项目所需的集成提示词，已翻译成中文（专有名词保留英文，附完整 CSS）。
+      点右上角「复制全文」按钮，把真实源码粘进占位符后投喂给 AI 编码工具即可复现本页效果。
+    </p>
+    <PromptCopyBox prompt={promptZh} />
+  </article>
+</BaseLayout>

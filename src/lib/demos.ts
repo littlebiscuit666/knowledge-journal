@@ -30,6 +30,16 @@ const ALL_DEMOS: Demo[] = [
       'linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.28) 45%, transparent 62%), radial-gradient(rgba(255,255,255,0.85) 1.2px, transparent 1.3px)',
   },
   {
+    slug: 'circular-carousel',
+    title: 'CircularCarousel',
+    description:
+      'React Bits 开源组件：纯 CSS 3D 的环形照片轮播，圆筒/环绕/摩天轮/全景四种形状，可抓取甩动带惯性，用站内素材做成了一圈会转的照片环。附集成提示词中文翻译。',
+    date: '2026-11-18',
+    tags: ['react', 'css3d', '轮播'],
+    preview:
+      'linear-gradient(90deg, transparent 8%, rgba(255,255,255,0.14) 16%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.05) 70%, rgba(255,255,255,0.14) 84%, transparent 92%), linear-gradient(0deg, transparent 20%, rgba(255,255,255,0.10) 46%, rgba(255,255,255,0.28) 54%, rgba(255,255,255,0.10) 62%, transparent 88%)',
+  },
+  {
     slug: 'crystalized-ball',
     title: 'CrystalizedBall',
     description:
