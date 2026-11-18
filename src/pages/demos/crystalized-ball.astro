@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CrystalizedBallHero from '../../components/crystalizedball/CrystalizedBallHero.jsx';
+
+const usageExample = `import CrystalizedBall from './CrystalizedBall';
+
+<div style={{ width: '100%', height: '600px', position: 'relative' }}>
+  <CrystalizedBall
+    preset="plasma"
+    color="#F25BD0"
+    size={0.7}
+    crackle={0.85}
+    fill={0.5}
+    interactive
+    hoverStrength={0.7}
+  />
+</div>`;
+
+const props = [
+  { name: 'preset', type: "'plasma' | 'aurora' | 'nebula' | 'ember' | 'frost' | 'solar' | 'eclipse' | 'abyss'", def: "'plasma'", desc: '完整的初始外观，含颜色。任何标记「来自预设」的属性传入时都会覆盖预设值。' },
+  { name: 'color', type: 'string', def: '来自预设', desc: '球的唯一颜色。白热的边缘、辉光与耀斑、尘埃色调、火花和雾霭都由它派生。' },
+  { name: 'theme', type: "'dark' | 'light'", def: "'dark'", desc: '球所处的背景。dark 把球渲染成发光体；light 以清爽的墨线描绘，边缘核心白热。' },
+  { name: 'size', type: 'number', def: '0.7', desc: '球的直径，占容器较小边的比例。' },
+  { name: 'strands', type: 'number', def: '来自预设', desc: '编绕在边缘上的电弧线条数，1 到 8。' },
+  { name: 'crackle', type: 'number', def: '来自预设', desc: '线条弯折与抖动的程度。低值安静地嗡鸣，高值噼啪作响。' },
+  { name: 'flares', type: 'number', def: '来自预设', desc: '辉光从边缘向外舔舐的幅度，以缓慢移动的耀斑形式呈现。' },
+  { name: 'glow', type: 'number', def: '来自预设', desc: '边缘周围光环的强度。' },
+  { name: 'sparks', type: 'number', def: '来自预设', desc: '小电弧沿边缘内侧放电的频率。0 关闭。' },
+  { name: 'particleCount', type: 'number', def: '来自预设', desc: '球内尘埃粒子的数量，最多 40000。' },
+  { name: 'fill', type: 'number', def: '来自预设', desc: '球的填充程度。低值让尘埃沉在底部，高值让它浮到顶部。' },
+  { name: 'motion', type: "'rise' | 'fall' | 'drift' | 'orbit'", def: '来自预设', desc: '尘埃的运动方式。rise 像余烬般上浮，fall 像雪一样飘落，drift 随意游移，orbit 绕小圈循环。' },
+  { name: 'particleShape', type: "'square' | 'round'", def: '来自预设', desc: '清晰的方形像素或柔和的圆点。' },
+  { name: 'depth', type: 'number', def: '来自预设', desc: '深度线索的强度。球后部的尘埃更小更暗。' },
+  { name: 'sway', type: 'number', def: '来自预设', desc: '尘埃在玻璃球内来回摆动的幅度，展现其纵深。' },
+  { name: 'twinkle', type: 'number', def: '来自预设', desc: '尘埃闪烁明灭的程度。' },
+  { name: 'haze', type: 'number', def: '来自预设', desc: '汇聚在尘埃下方和玻璃内侧的辉光强度。' },
+  { name: 'speed', type: 'number', def: '1', desc: '边缘、耀斑和火花的动画速度。' },
+  { name: 'dustSpeed', type: 'number', def: '来自预设', desc: '尘埃的动画速度。' },
+  { name: 'interactive', type: 'boolean', def: 'true', desc: '允许光标触碰球。边缘朝光标方向发热并扬起耀斑，尘埃在其尾迹中打旋、转向，点击会摇晃球体。' },
+  { name: 'hoverStrength', type: 'number', def: '0.7', desc: '球对光标的反应强度，0 到 1。' },
+  { name: 'intro', type: 'boolean', def: 'true', desc: '挂载时边缘通电亮起，尘埃从球底向上点亮。' },
+  { name: 'paused', type: 'boolean', def: 'false', desc: '冻结动画。尘埃仍可被搅动。' },
+  { name: 'className', type: 'string', def: "''", desc: '根元素的额外类名。' },
+  { name: 'style', type: 'CSSProperties', def: '-', desc: '根元素的内联样式。' },
+];
+---
+
+<BaseLayout
+  title="CrystalizedBall 实时演示 · React Bits 集成提示词 · 每日所学"
+  description="React Bits 开源组件 CrystalizedBall 的实时效果演示与集成提示词中文翻译：ogl 驱动的等离子水晶球，八种预设可切换。"
+>
+  <CrystalizedBallHero client:visible />
+
+  <article class="prose prose-slate dark:prose-invert mt-10 max-w-none prose-headings:scroll-mt-20 prose-pre:bg-slate-950">
+    <h2 id="about">这是什么</h2>
+    <p>
+      <strong>CrystalizedBall</strong> 是
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">React Bits</a>
+      组件库中的一个开源 React 组件（变体 JavaScript + CSS，依赖 <code>ogl</code>）：
+      用 WebGL 渲染一颗玻璃质感的水晶球——边缘缠绕着抖动的电弧线条，球内上万颗尘埃粒子缓缓漂浮，
+      辉光在玻璃内侧聚成雾霭。光标掠过时边缘朝它发热、扬起耀斑，尘埃随之打旋；点击会摇晃球体、激起放电。
+      顶部就是实时效果，八种预设可切换。
+    </p>
+    <p>
+      它的发布方式和本站第一个特效
+      <a href="/demos/pattern-waves/">PatternWaves</a> 一样：官方提供一段<strong>集成提示词（Prompt）</strong>——
+      把组件源码、用法示例和 Props 表打包成一段结构化文本，交给 Claude Code、Cursor 这类 AI 编码工具，
+      它就能自动完成装依赖、落文件、渲染组件的全过程。下方收录这段提示词的中文翻译，专有名词保留英文原文。
+    </p>
+
+    <h2 id="usage">用法示例</h2>
+    <pre><code class="language-jsx">{usageExample}</code></pre>
+
+    <h2 id="props">Props 一览</h2>
+    <table>
+      <thead>
+        <tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        {props.map((p) => (
+          <tr>
+            <td><code>{p.name}</code></td>
+            <td><code>{p.type}</code></td>
+            <td><code>{p.def}</code></td>
+            <td>{p.desc}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2 id="steps">集成步骤</h2>
+    <ol>
+      <li>安装列出的依赖（<code>ogl</code>）。</li>
+      <li>把组件源码复制到项目的合适目录。</li>
+      <li>在引入组件的同时引入 CSS 文件。</li>
+      <li>以上面的用法示例为起点导入并渲染组件。</li>
+      <li>根据具体场景调整 props —— 全部可用选项见上方 Props 表。</li>
+    </ol>
+
+    <h2 id="origin">来源</h2>
+    <p>
+      组件与提示词来自
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">reactbits.dev</a>（React Bits，MIT License），
+      完整组件索引见
+      <a href="https://reactbits.dev/llms.txt" target="_blank" rel="noopener noreferrer">reactbits.dev/llms.txt</a>。
+      注意：提示词模板中「组件完整源码」一段是占位符，投喂 AI 前需要把真实源码粘进去。
+    </p>
+  </article>
+</BaseLayout>

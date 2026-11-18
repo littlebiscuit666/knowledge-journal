@@ -29,6 +29,16 @@ const ALL_DEMOS: Demo[] = [
     preview:
       'linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.28) 45%, transparent 62%), radial-gradient(rgba(255,255,255,0.85) 1.2px, transparent 1.3px)',
   },
+  {
+    slug: 'crystalized-ball',
+    title: 'CrystalizedBall',
+    description:
+      'React Bits 开源组件：ogl 驱动的等离子水晶球，电弧缠绕边缘、上万尘埃粒子随光标打旋，点击摇晃球体，八种预设从等离子到深渊。附集成提示词中文翻译。',
+    date: '2026-11-18',
+    tags: ['react', 'webgl', 'ogl'],
+    preview:
+      'radial-gradient(circle at 50% 58%, rgba(255,255,255,0.95) 0%, rgba(242,91,208,0.55) 7%, rgba(242,91,208,0.18) 24%, transparent 44%)',
+  },
 ];
 
 export const DEMOS = ALL_DEMOS.sort((a, b) => b.date.localeCompare(a.date));
