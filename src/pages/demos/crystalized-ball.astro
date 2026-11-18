@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CrystalizedBallHero from '../../components/crystalizedball/CrystalizedBallHero.jsx';
+import PromptCopyBox from '../../components/PromptCopyBox.astro';
+// 提示词全文存为 md 单一事实来源，?raw 读入供一键复制
+import promptZh from '../../lib/prompts/crystalized-ball.zh.md?raw';
 
 const usageExample = `import CrystalizedBall from './CrystalizedBall';
 
@@ -103,7 +106,13 @@ const props = [
       <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">reactbits.dev</a>（React Bits，MIT License），
       完整组件索引见
       <a href="https://reactbits.dev/llms.txt" target="_blank" rel="noopener noreferrer">reactbits.dev/llms.txt</a>。
-      注意：提示词模板中「组件完整源码」一段是占位符，投喂 AI 前需要把真实源码粘进去。
     </p>
+
+    <h2 id="prompt-zh">一键复制：完整提示词（中文）</h2>
+    <p>
+      下面整段就是把 <code>CrystalizedBall</code> 装进任意项目所需的集成提示词，已翻译成中文（专有名词保留英文）。
+      点右上角「复制全文」按钮，直接投喂给 Claude Code、Cursor 这类 AI 编码工具即可复现本页效果。
+    </p>
+    <PromptCopyBox prompt={promptZh} />
   </article>
 </BaseLayout>

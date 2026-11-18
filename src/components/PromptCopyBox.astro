@@ -1,0 +1,52 @@
+---
+interface Props {
+  /** 提示词全文（纯文本/markdown），点按钮整段复制 */
+  prompt: string;
+  /** 标签文案 */
+  label?: string;
+}
+
+const { prompt, label = '完整集成提示词 · 中文版' } = Astro.props;
+---
+
+<section class="not-prose mt-6">
+  <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+    <div
+      class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-100 px-4 py-2.5 dark:border-slate-800 dark:bg-slate-900"
+    >
+      <span class="text-sm font-medium text-slate-600 dark:text-slate-300">{label}</span>
+      <button
+        type="button"
+        data-copy-btn
+        class="shrink-0 rounded-md bg-blue-600 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-500"
+      >
+        复制全文
+      </button>
+    </div>
+    <pre
+      class="max-h-[420px] overflow-auto bg-slate-950 p-4 text-xs leading-relaxed text-slate-200"
+      tabindex="0"><code data-copy-text>{prompt}</code></pre>
+  </div>
+  <p class="mt-2 text-xs text-slate-400 dark:text-slate-500">
+    「组件完整源码」一段是占位符：投喂 AI 前把真实源码粘进去即可（本页不贴大段源码）。
+  </p>
+</section>
+
+<script>
+  document.querySelectorAll('[data-copy-btn]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const box = btn.closest('section');
+      const text = box?.querySelector('[data-copy-text]')?.textContent ?? '';
+      const original = btn.textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = '已复制 ✓';
+      } catch {
+        btn.textContent = '复制失败，请手动选择';
+      }
+      setTimeout(() => {
+        btn.textContent = original;
+      }, 2000);
+    });
+  });
+</script>
