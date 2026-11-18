@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PatternWavesHero from '../../components/patternwaves/PatternWavesHero.jsx';
+// 源码块用 ?raw 导入，构建时内联文件内容，保证「页面展示 = 实际运行」单一事实来源
+import jsxSource from '../../components/patternwaves/PatternWaves.jsx?raw';
+import cssSource from '../../components/patternwaves/PatternWaves.css?raw';
+
+const usageExample = `import PatternWaves from './PatternWaves';
+
+<div style={{ width: '100%', height: '600px', position: 'relative' }}>
+  <PatternWaves
+    preset="silk"
+    color="#ffffff"
+    backgroundColor="#000000"
+    fade="edges"
+    interactive
+    cursorSize={50}
+    cursorStrength={0.6}
+  />
+</div>`;
+
+const props = [
+  { name: 'preset', type: "'silk' | 'ocean' | 'pond' | 'lines' | 'terminal' | 'mesh'", def: "'silk'", desc: '完整的初始外观。下方每个图案 / 波形 / 光照属性传入时都会覆盖预设值。' },
+  { name: 'pattern', type: "'dot' | 'square' | 'plus' | 'line' | 'glyph'", def: '来自预设', desc: '绘制表面的标记。line 是流动的等高线，glyph 按亮度挑选字符。' },
+  { name: 'wave', type: "'silk' | 'swell' | 'ripple'", def: '来自预设', desc: '运动表面的形态。silk 是垂坠的布料褶皱，swell 是平行的滚动波，ripple 是从屏幕外传来的环形波。' },
+  { name: 'color', type: 'string', def: "'#ffffff'", desc: '图案的唯一颜色。阴影、中间调和高光都由它派生。比背景更深的颜色会像墨水一样印出来。' },
+  { name: 'backgroundColor', type: 'string', def: "'#000000'", desc: '图案背后的颜色。传 transparent 可透出页面。' },
+  { name: 'spacing', type: 'number', def: '来自预设', desc: '标记之间的距离（CSS 像素）。值越小打印越细腻。' },
+  { name: 'markSize', type: 'number', def: '来自预设', desc: '最大标记占间距的比例。' },
+  { name: 'depth', type: 'number', def: '来自预设', desc: '表面的高度。越深的表面阴影越强，波峰处的标记抬升越明显。' },
+  { name: 'light', type: 'number', def: '来自预设', desc: '掠过波浪的光的角度（度），范围 -90 到 90。0 正对褶皱打光，数值越大越斜。' },
+  { name: 'shine', type: 'number', def: '来自预设', desc: '表面捕捉光线处闪光的强度。' },
+  { name: 'contrast', type: 'number', def: '来自预设', desc: '安静的阴影与受光区域之间的反差。' },
+  { name: 'speed', type: 'number', def: '来自预设', desc: '表面运动速度。0 时冻结（光标涟漪仍然有效）。' },
+  { name: 'scale', type: 'number', def: '来自预设', desc: '波浪的尺寸。值越大形态越宽缓。' },
+  { name: 'direction', type: 'number', def: '来自预设', desc: '波浪行进方向（度）。光会随它一起转向。' },
+  { name: 'opacity', type: 'number', def: '1', desc: '图案整体不透明度，0 到 1。' },
+  { name: 'fade', type: "'edges' | 'center' | 'bottom' | 'top' | 'none'", def: "'edges'", desc: '图案向背景淡出的方向。center 让中间保持平静以便放标题，bottom / top 向对应边缘淡出。' },
+  { name: 'fadeSize', type: 'number', def: '0.5', desc: '淡出的范围，0.05 到 1。' },
+  { name: 'characters', type: 'string', def: "'.:-=+*#%@'", desc: 'glyph 图案使用的字符，从最亮到最密排列。' },
+  { name: 'interactive', type: 'boolean', def: 'true', desc: '允许光标扰动表面。移动会留下捕捉光线的涟漪尾迹，点击会溅起水花。' },
+  { name: 'cursorSize', type: 'number', def: '50', desc: '光标推动的表面区域半径（CSS 像素）。' },
+  { name: 'cursorStrength', type: 'number', def: '0.6', desc: '光标推动表面的力度，0 到 1。' },
+  { name: 'intro', type: 'boolean', def: 'true', desc: '挂载时标记从中心淡入，随后表面隆起、光扫过表面。' },
+  { name: 'paused', type: 'boolean', def: 'false', desc: '冻结表面。光标涟漪继续生效。' },
+  { name: 'className', type: 'string', def: "''", desc: '根元素的额外类名。' },
+  { name: 'style', type: 'CSSProperties', def: '-', desc: '根元素的内联样式。' },
+];
+---
+
+<BaseLayout
+  title="PatternWaves 实时演示 · React Bits 集成提示词 · 每日所学"
+  description="React Bits 开源组件 PatternWaves 的实时效果演示与集成提示词中文翻译：ogl 驱动的交互式波浪表面，六种预设可切换。"
+>
+  <PatternWavesHero client:visible />
+
+  <article class="prose prose-slate dark:prose-invert mt-10 max-w-none prose-headings:scroll-mt-20 prose-pre:bg-slate-950">
+    <h2 id="about">这是什么</h2>
+    <p>
+      <strong>PatternWaves</strong> 是 <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">React Bits</a>
+      组件库中的一个开源 React 组件：用 <code>ogl</code>（WebGL）在网页上渲染一片会动的波浪表面——
+      点阵、方块、等高线、字符雨都是它的「打印」方式；光标划过会留下捕捉光线的涟漪尾迹，点击会溅起水花。
+    </p>
+    <p>
+      它的发布方式很特别：官方提供一段<strong>集成提示词（Prompt）</strong>——把组件源码、用法示例和
+      Props 表打包成一段结构化文本，交给 Claude Code、Cursor 这类 AI 编码工具，它就能自动完成
+      装依赖、落文件、渲染组件的全过程。
+    </p>
+    <p>
+      本页就是用这段提示词集成出来的成果：顶部是<em>实时效果</em>（六个预设可切换），下方是提示词全文的中文翻译。
+      翻译约定：专有名词（组件名、prop 名、预设名、依赖名等）保留英文原文，代码块原样收录、不做翻译。
+    </p>
+
+    <h2 id="meta">组件信息</h2>
+    <ul>
+      <li>组件：<code>PatternWaves</code></li>
+      <li>变体：JavaScript + CSS</li>
+      <li>依赖：<code>ogl</code></li>
+    </ul>
+
+    <h2 id="usage">用法示例</h2>
+    <pre><code class="language-jsx">{usageExample}</code></pre>
+
+    <h2 id="props">Props 一览</h2>
+    <table>
+      <thead>
+        <tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        {props.map((p) => (
+          <tr>
+            <td><code>{p.name}</code></td>
+            <td><code>{p.type}</code></td>
+            <td><code>{p.def}</code></td>
+            <td>{p.desc}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2 id="source">组件完整源码</h2>
+    <pre><code class="language-jsx">{jsxSource}</code></pre>
+
+    <h2 id="css">组件 CSS</h2>
+    <pre><code class="language-css">{cssSource}</code></pre>
+
+    <h2 id="steps">集成步骤</h2>
+    <ol>
+      <li>安装列出的依赖（<code>ogl</code>）。</li>
+      <li>把组件源码复制到项目的合适目录。</li>
+      <li>在引入组件的同时引入 CSS 文件。</li>
+      <li>以上面的用法示例为起点导入并渲染组件。</li>
+      <li>根据具体场景调整 props —— 全部可用选项见上方 Props 表。</li>
+    </ol>
+
+    <h2 id="colophon">本页是怎么搭的</h2>
+    <ul>
+      <li>本站是 Astro 5 纯静态站，通过 <code>@astrojs/react</code> 挂了一个 React 岛（<code>client:visible</code>），React 代码只在本页加载，其余页面零影响。</li>
+      <li>组件源码一行未改，原样收录在 <code>src/components/patternwaves/</code>；页面上的源码块在构建时直接从组件文件读取，展示与运行永远一致。</li>
+      <li>顶部六个预设按钮就是 <code>preset</code> prop 的实况演示：切换时只换这一个 prop，其余渲染参数全部交给预设。</li>
+    </ul>
+
+    <h2 id="origin">来源与授权</h2>
+    <ul>
+      <li>组件与提示词来自 <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">reactbits.dev</a>（React Bits），MIT License。</li>
+      <li>完整组件索引：<a href="https://reactbits.dev/llms.txt" target="_blank" rel="noopener noreferrer">https://reactbits.dev/llms.txt</a> —— 这个组件不合适或需要更多素材时，可以直接抓取该文件。</li>
+      <li>注意：提示词模板中「组件完整源码」一段是占位符，投喂 AI 前需要把真实源码粘进去。</li>
+    </ul>
+  </article>
+</BaseLayout>
