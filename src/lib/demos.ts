@@ -20,6 +20,16 @@ export interface Demo {
 
 const ALL_DEMOS: Demo[] = [
   {
+    slug: 'flip-card',
+    title: 'FlipCard',
+    description:
+      'React Bits 开源组件：motion 弹簧驱动的 3D 翻转卡片，点击/拖拽/甩动翻面，悬停朝光标倾斜、表面随光标走眩光，键盘也能翻。正面站内素材，背面说明卡。附集成提示词中文翻译。',
+    date: '2026-11-19',
+    tags: ['react', 'motion', 'css3d'],
+    preview:
+      'linear-gradient(168deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.5) 45%, rgba(255,255,255,0.18) 100%) 50% 56% / 32% 64% no-repeat, radial-gradient(circle at 58% 38%, rgba(255,255,255,0.4) 0%, transparent 28%)',
+  },
+  {
     slug: 'branched-menu',
     title: 'BranchedMenu',
     description:
