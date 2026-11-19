@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RefineFrameHero from '../../components/refineframe/RefineFrameHero.jsx';
+import PromptCopyBox from '../../components/PromptCopyBox.astro';
+// 提示词全文存为 md 单一事实来源，?raw 读入供一键复制
+import promptZh from '../../lib/prompts/refine-frame.zh.md?raw';
+
+const usageExample = `import RefineFrame from './RefineFrame';
+
+<RefineFrame
+  status={job.status}
+  aspectRatio="4 / 3"
+  width={320}
+  radius={16}
+  background="#27272a"
+  color="#f5f5f5"
+  stageDuration={400}
+  sweep
+  showStatus
+  hideAfter={1200}
+  retryLabel="Retry"
+  onRetry={() => job.restart()}
+>
+  <img src={job.url} alt={job.prompt} crossOrigin="anonymous" />
+</RefineFrame>`;
+
+const props = [
+  { name: 'status', type: "'queued' \\| 'generating' \\| 'refining' \\| 'complete' \\| 'error'", def: "'generating'", desc: '当前阶段。每次变化都会把媒体补间到该阶段的观感。' },
+  { name: 'children', type: 'ReactNode', def: '-', desc: '媒体本体：img、video 或 canvas，铺满整个框。' },
+  { name: 'aspectRatio', type: 'string', def: "'4 / 3'", desc: '生成前和生成中预留的宽高比，布局全程不跳。' },
+  { name: 'width', type: 'number', def: '320', desc: '框宽（px），上限为父容器宽度。' },
+  { name: 'radius', type: 'number', def: '16', desc: '圆角半径（px）。' },
+  { name: 'background', type: 'string', def: "'#27272a'", desc: '媒体背后的底色，也是状态 chip 的底色。' },
+  { name: 'color', type: 'string', def: "'#f5f5f5'", desc: '墨色：chip 文字、扫描光带和重试按钮。' },
+  { name: 'stageDuration', type: 'number', def: '400', desc: '每个阶段补间的时长（ms）。' },
+  { name: 'sweep', type: 'boolean', def: 'true', desc: '工作时有一道柔和光带扫过画面。' },
+  { name: 'showStatus', type: 'boolean', def: 'true', desc: '带图标和阶段文字的状态 chip。' },
+  { name: 'hideAfter', type: 'number', def: '1200', desc: '完成后 chip 再过多少毫秒淡出。0 表示不淡出。' },
+  { name: 'labels', type: 'Partial<Record<status, string>>', def: 'DEFAULT_LABELS', desc: '每个阶段的 chip 文字：Queued、Generating、Refining、Ready、Failed。' },
+  { name: 'retryLabel', type: 'string', def: "'Retry'", desc: '错误时重试按钮的文字。' },
+  { name: 'onRetry', type: '() => void', def: '-', desc: '重试按钮被按下时调用。不传就不显示按钮。' },
+  { name: 'className', type: 'string', def: "''", desc: '框的额外类名。' },
+];
+---
+
+<BaseLayout
+  title="RefineFrame 实时演示 · React Bits 集成提示词 · 每日所学"
+  description="React Bits 开源组件 RefineFrame 的实时效果演示与集成提示词中文翻译：canvas 马赛克从粗到细揭示图像的 AI 出图进度框，五阶段状态 chip 与失败重试。"
+>
+  <RefineFrameHero client:visible />
+
+  <article class="prose prose-slate dark:prose-invert mt-10 max-w-none prose-headings:scroll-mt-20 prose-pre:bg-slate-950">
+    <h2 id="about">这是什么</h2>
+    <p>
+      <strong>RefineFrame</strong> 是
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">React Bits</a>
+      组件库中的一个开源 React 组件（变体 JavaScript + CSS，依赖 <code>@hugeicons/react</code> 与
+      <code>@hugeicons/core-free-icons</code>）：一个「生成中」观感的媒体进度框——
+      把 img / video / canvas 放进框里，组件在五个阶段（queued 排队 / generating 生成 / refining 精修 /
+      complete 完成 / error 失败）之间切换时，canvas 会把图像预渲染成 9 级像素块，
+      从马赛克逐行揭示到全清，接缝处用 14 条过渡条带 + 扫描光带抹平；
+      左下角的状态 chip 带阶段图标（转圈 / 打勾 / 感叹号，文字模糊淡入），
+      完成后停留 <code>hideAfter</code> 毫秒自动淡出，失败时中央弹出重试按钮。
+      开启系统「减少动态」偏好后光带与等待动画停用、直接呈现结果。
+    </p>
+    <p>
+      这个组件和站内的日常绝配——它本来就是「AI 出图进度条」的样子，素材直接用了站里的
+      FLUX / ComfyUI 测试图。依赖的 <code>@hugeicons</code> 全家桶在
+      <a href="/demos/branched-menu/">BranchedMenu</a> 那次就装好了，<strong>这次零新依赖</strong>。
+    </p>
+    <p>
+      它的发布方式和前几个特效
+      <a href="/demos/branched-menu/">BranchedMenu</a>、<a href="/demos/flip-card/">FlipCard</a>、
+      <a href="/demos/pattern-waves/">PatternWaves</a>、<a href="/demos/crystalized-ball/">CrystalizedBall</a>、
+      <a href="/demos/circular-carousel/">CircularCarousel</a>
+      一样：官方提供一段<strong>集成提示词（Prompt）</strong>——把组件源码、用法示例和 Props 表打包成一段结构化文本，
+      交给 Claude Code、Cursor 这类 AI 编码工具，它就能自动完成落文件、渲染组件的全过程。
+      下方收录这段提示词的中文翻译，专有名词保留英文原文。
+    </p>
+
+    <h2 id="usage">用法示例</h2>
+    <pre><code class="language-jsx">{usageExample}</code></pre>
+
+    <h2 id="props">Props 一览</h2>
+    <table>
+      <thead>
+        <tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        {props.map((p) => (
+          <tr>
+            <td><code>{p.name}</code></td>
+            <td><code>{p.type}</code></td>
+            <td><code>{p.def}</code></td>
+            <td>{p.desc}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2 id="steps">集成步骤</h2>
+    <ol>
+      <li>安装列出的依赖（本站已在 BranchedMenu 集成时装好，零新依赖）。</li>
+      <li>把组件源码复制到项目的合适目录。</li>
+      <li>在引入组件的同时引入 CSS 文件。</li>
+      <li>以上面的用法示例为起点导入并渲染组件。</li>
+      <li>根据具体场景调整 props —— 全部可用选项见上方 Props 表。</li>
+    </ol>
+
+    <h2 id="origin">来源</h2>
+    <p>
+      组件与提示词来自
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">reactbits.dev</a>（React Bits，MIT License），
+      完整组件索引见
+      <a href="https://reactbits.dev/llms.txt" target="_blank" rel="noopener noreferrer">reactbits.dev/llms.txt</a>。
+    </p>
+
+    <h2 id="prompt-zh">一键复制：完整提示词（中文）</h2>
+    <p>
+      下面整段就是把 <code>RefineFrame</code> 装进任意项目所需的集成提示词，已翻译成中文（专有名词保留英文，附完整组件源码和 CSS）。
+      点右上角「复制全文」按钮，把真实源码粘进占位符后投喂给 AI 编码工具即可复现本页效果。
+    </p>
+    <PromptCopyBox prompt={promptZh} />
+  </article>
+</BaseLayout>

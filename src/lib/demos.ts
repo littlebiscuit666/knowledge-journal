@@ -20,6 +20,16 @@ export interface Demo {
 
 const ALL_DEMOS: Demo[] = [
   {
+    slug: 'refine-frame',
+    title: 'RefineFrame',
+    description:
+      'React Bits 开源组件：AI 出图风格的媒体进度框，canvas 马赛克从粗到细逐行揭示图片，五阶段状态 chip + 扫描光带 + 失败重试。素材就是站内的 FLUX/ComfyUI 测试图，零新依赖。附集成提示词中文翻译。',
+    date: '2026-11-19',
+    tags: ['react', 'canvas', '组件'],
+    preview:
+      'repeating-conic-gradient(rgba(255,255,255,0.4) 0% 25%, rgba(255,255,255,0.08) 0% 50%) 50% 54% / 58% 62% no-repeat, linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.7)) 10px calc(100% - 10px) / 54px 13px no-repeat',
+  },
+  {
     slug: 'flip-card',
     title: 'FlipCard',
     description:
@@ -47,7 +57,7 @@ const ALL_DEMOS: Demo[] = [
     date: '2026-11-18',
     tags: ['react', 'webgl', 'ogl'],
     preview:
-      'linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.28) 45%, transparent 62%), radial-gradient(rgba(255,255,255,0.85) 1.2px, transparent 1.3px)',
+      'linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.28) 45%, transparent 62%) 50% 0 / 100% 100% no-repeat, radial-gradient(rgba(255,255,255,0.85) 1.2px, transparent 1.3px) 0 0 / 11px 11px repeat',
   },
   {
     slug: 'circular-carousel',
@@ -57,7 +67,7 @@ const ALL_DEMOS: Demo[] = [
     date: '2026-11-18',
     tags: ['react', 'css3d', '轮播'],
     preview:
-      'linear-gradient(90deg, transparent 8%, rgba(255,255,255,0.14) 16%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.05) 70%, rgba(255,255,255,0.14) 84%, transparent 92%), linear-gradient(0deg, transparent 20%, rgba(255,255,255,0.10) 46%, rgba(255,255,255,0.28) 54%, rgba(255,255,255,0.10) 62%, transparent 88%)',
+      'linear-gradient(90deg, transparent 8%, rgba(255,255,255,0.14) 16%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.05) 70%, rgba(255,255,255,0.14) 84%, transparent 92%) 50% 0 / 100% 100% no-repeat, linear-gradient(0deg, transparent 20%, rgba(255,255,255,0.10) 46%, rgba(255,255,255,0.28) 54%, rgba(255,255,255,0.10) 62%, transparent 88%) 0 0 / 11px 11px repeat',
   },
   {
     slug: 'crystalized-ball',
