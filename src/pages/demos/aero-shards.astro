@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AeroShardsHero from '../../components/aeroshards/AeroShardsHero.jsx';
+import PromptCopyBox from '../../components/PromptCopyBox.astro';
+// 提示词全文存为 md 单一事实来源，?raw 读入供一键复制
+import promptZh from '../../lib/prompts/aero-shards.zh.md?raw';
+
+const usageExample = `import AeroShards from './AeroShards';
+
+<div style={{ width: '100%', height: '600px', position: 'relative' }}>
+  <AeroShards
+    shardColor="#896ABD"
+    accentColor="#A855F7"
+    placement="full"
+    material="glass"
+    markers="plus"
+    count={1300}
+    depthOfField={0.75}
+    vignette={0.3}
+    mouseInteraction
+    pulseOnClick
+    holdToGather
+  />
+</div>`;
+
+const props = [
+  { name: 'shardColor', type: 'string', def: "'#896ABD'", desc: '碎片的主色。' },
+  { name: 'accentColor', type: 'string', def: "'#A855F7'", desc: '碎片捕捉的光、边缘轮廓光与测量标记的颜色。' },
+  { name: 'backgroundColor', type: 'string', def: "'transparent'", desc: '填充碎片后面的画布。transparent 让页面背景透出。' },
+  { name: 'lightMode', type: 'boolean', def: 'false', desc: '以柔和的染色玻璃渲染碎片，适配浅色背景。' },
+  { name: 'placement', type: "'full' | 'left' | 'right' | 'center'", def: "'full'", desc: '飘带的流向：贯穿整个画面、沿一侧垂落、或绕中心成环。' },
+  { name: 'material', type: "'glass' | 'chrome'", def: "'glass'", desc: '碎片表面质感：边缘捕捉光线的厚玻璃，或抛光镀铬。' },
+  { name: 'markers', type: "'plus' | 'dots' | 'none'", def: "'plus'", desc: '漂浮在各层深度的测量标记。少数会闪烁，离光标最近的会获得瞄准框。' },
+  { name: 'count', type: 'number', def: '1300', desc: '所有飘带上碎片的总数。' },
+  { name: 'shardSize', type: 'number', def: '1', desc: '碎片的大小。' },
+  { name: 'spread', type: 'number', def: '1', desc: '飘带的宽度。' },
+  { name: 'twist', type: 'number', def: '1', desc: '飘带沿长度方向的扭转程度。' },
+  { name: 'billow', type: 'number', def: '1', desc: '飘带像丝绸一样起伏波动的幅度。' },
+  { name: 'speed', type: 'number', def: '1', desc: '碎片流动的速度。' },
+  { name: 'scale', type: 'number', def: '1', desc: '整个场景的缩放。' },
+  { name: 'depthOfField', type: 'number', def: '0.75', desc: '远处飘带的虚化程度。0 保持全部清晰。' },
+  { name: 'glow', type: 'number', def: '0.35', desc: '最亮光斑周围的柔和泛光。' },
+  { name: 'grain', type: 'number', def: '0.06', desc: '碎片上的胶片颗粒。0 关闭。' },
+  { name: 'vignette', type: 'number', def: '0.3', desc: '向画面边缘渐暗。0 铺满到边。' },
+  { name: 'intro', type: 'boolean', def: 'true', desc: '挂载时飘带从前到后依次自左侧绘入。' },
+  { name: 'mouseInteraction', type: 'boolean', def: 'true', desc: '光标拨开经过的碎片，并让镜头朝光标方向倾斜。' },
+  { name: 'mouseStrength', type: 'number', def: '0.6', desc: '光标拨开碎片的力度。' },
+  { name: 'parallax', type: 'number', def: '0.5', desc: '镜头朝光标倾斜的幅度。' },
+  { name: 'pulseOnClick', type: 'boolean', def: 'true', desc: '点击向所有层深发出一道光环，途经的碎片随之翻转。' },
+  { name: 'holdToGather', type: 'boolean', def: 'true', desc: '按住把附近的碎片聚成漩涡，松手后炸散回去。' },
+  { name: 'paused', type: 'boolean', def: 'false', desc: '冻结流动。' },
+  { name: 'dpr', type: 'number', def: '2', desc: '画布的最大设备像素比。' },
+  { name: 'onError', type: '(error: Error) => void', def: '-', desc: 'WebGPU 不可用或失败时回调，便于展示降级方案。' },
+  { name: 'className', type: 'string', def: "''", desc: '容器的额外类名。' },
+  { name: 'style', type: 'CSSProperties', def: '-', desc: '容器的内联样式。' },
+];
+---
+
+<BaseLayout
+  title="AeroShards 实时演示 · React Bits 集成提示词 · 每日所学"
+  description="React Bits 开源组件 AeroShards 的实时效果演示与集成提示词中文翻译：WebGPU/vgpu 驱动的丝绸玻璃碎片飘带，光标拨开、点击涟漪、按住聚漩涡。"
+>
+  <AeroShardsHero client:visible />
+
+  <article class="prose prose-slate dark:prose-invert mt-10 max-w-none prose-headings:scroll-mt-20 prose-pre:bg-slate-950">
+    <h2 id="about">这是什么</h2>
+    <p>
+      <strong>AeroShards</strong> 是
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">React Bits</a>
+      组件库中的一个开源 React 背景组件（变体 JavaScript + CSS，依赖 <code>vgpu</code>）：
+      用 WebGPU + WGSL 着色器渲染丝绸般的厚玻璃碎片飘带——1300 片五层景深的玻璃棱片缓缓流动，
+      边缘沿程序化「摄影棚灯光」捕捉高光，远处飘带随景深虚化。
+      光标掠过时拨开碎片、镜头微微倾斜；点击发出一道翻转碎片的光环；按住则把附近碎片聚成漩涡，松手炸散。
+      顶部就是实时效果，placement / material / markers 可以切换。
+    </p>
+    <p>
+      这是本站第一个<strong>走 WebGPU</strong> 的特效：前面几个（PatternWaves、CrystalizedBall）用 ogl 走 WebGL，
+      而 vgpu 是新一代 WebGPU 声明式库，碎片的折射、色散、虚化全部在 WGSL compute/render shader 里逐像素光线追踪
+      （每片碎片是一个五边形棱柱，片元里对棱柱做 ray-prism trace）。浏览器需要较新的 Chrome/Edge 才支持 WebGPU，
+      不支持时组件通过 <code>onError</code> 回调降级提示。
+    </p>
+    <p>
+      和站内其他特效一样，官方把它打包成一段<strong>集成提示词（Prompt）</strong>——组件源码、用法示例和 Props 表
+      组成结构化文本，交给 Claude Code、Cursor 这类 AI 编码工具即可自动集成。下方收录这段提示词的中文翻译，专有名词保留英文原文。
+    </p>
+
+    <h2 id="usage">用法示例</h2>
+    <pre><code class="language-jsx">{usageExample}</code></pre>
+
+    <h2 id="props">Props 一览</h2>
+    <table>
+      <thead>
+        <tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        {props.map((p) => (
+          <tr>
+            <td><code>{p.name}</code></td>
+            <td><code>{p.type}</code></td>
+            <td><code>{p.def}</code></td>
+            <td>{p.desc}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <h2 id="steps">集成步骤</h2>
+    <ol>
+      <li>安装列出的依赖（<code>vgpu</code>，需要浏览器支持 WebGPU）。</li>
+      <li>把组件源码复制到项目的合适目录。</li>
+      <li>在引入组件的同时引入 CSS 文件。</li>
+      <li>以上面的用法示例为起点导入并渲染组件。</li>
+      <li>根据具体场景调整 props —— 全部可用选项见上方 Props 表。</li>
+    </ol>
+
+    <h2 id="origin">来源</h2>
+    <p>
+      组件与提示词来自
+      <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer">reactbits.dev</a>（React Bits，MIT License），
+      完整组件索引见
+      <a href="https://reactbits.dev/llms.txt" target="_blank" rel="noopener noreferrer">reactbits.dev/llms.txt</a>。
+    </p>
+
+    <h2 id="prompt-zh">一键复制：完整提示词（中文）</h2>
+    <p>
+      下面整段就是把 <code>AeroShards</code> 装进任意项目所需的集成提示词，已翻译成中文（专有名词保留英文）。
+      点右上角「复制全文」按钮，直接投喂给 Claude Code、Cursor 这类 AI 编码工具即可复现本页效果。
+    </p>
+    <PromptCopyBox prompt={promptZh} />
+  </article>
+</BaseLayout>

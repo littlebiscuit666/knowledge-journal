@@ -20,6 +20,16 @@ export interface Demo {
 
 const ALL_DEMOS: Demo[] = [
   {
+    slug: 'aero-shards',
+    title: 'AeroShards',
+    description:
+      'React Bits 开源组件：WebGPU/vgpu 驱动的丝绸玻璃碎片飘带，1300 片棱镜碎片五层景深缓缓流动，WGSL 片元里逐像素对棱柱光线追踪。光标拨开碎片、点击发翻转光环、按住聚成漩涡。本站首个 WebGPU 特效。附集成提示词中文翻译。',
+    date: '2026-11-20',
+    tags: ['react', 'webgpu', 'vgpu'],
+    preview:
+      'linear-gradient(112deg, transparent 18%, rgba(168,85,247,0.35) 30%, transparent 40%, rgba(137,106,189,0.4) 55%, transparent 66%, rgba(168,85,247,0.25) 80%, transparent 90%) 50% 0 / 100% 100% no-repeat, linear-gradient(68deg, transparent 30%, rgba(255,255,255,0.22) 45%, transparent 58%) 50% 0 / 100% 100% no-repeat',
+  },
+  {
     slug: 'refine-frame',
     title: 'RefineFrame',
     description:
